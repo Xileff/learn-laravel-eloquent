@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Voucher extends Model
 {
-    use HasUuids;
+    use HasUuids, SoftDeletes;
 
     protected $table = 'vouchers';
     protected $primaryKey = "id";
@@ -17,6 +18,6 @@ class Voucher extends Model
 
     public function uniqueIds(): array
     {
-        return [$this->primaryKey, 'voucher_code'];
+        return [$this->primaryKey, 'voucher_code']; // menerapkan uuid, bukan unique constraint
     }
 }
