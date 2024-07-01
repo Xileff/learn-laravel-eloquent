@@ -80,4 +80,25 @@ class CategoryTest extends TestCase
             $category->update();
         });
     }
+
+    public function testUpdateMany()
+    {
+        $categories = [];
+        for ($i = 0; $i < 10; $i++) {
+            $categories[] = [
+                "id" => "ID $i",
+                "name" => "Category $i"
+            ];
+        }
+        $result = Category::insert($categories);
+        $this->assertTrue($result);
+
+        Category::whereNull('description')->update([
+            'description' => 'Category updated'
+        ]);
+
+        $updateCount = Category::where('description', '=', 'Category updated')->count();
+
+        $this->assertEquals(10, $updateCount);
+    }
 }
