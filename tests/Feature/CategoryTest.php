@@ -190,7 +190,7 @@ class CategoryTest extends TestCase
         $category->is_active = false;
         $category->save();
 
-        // where is_active = 1
+        //  where is_active = 1
         $category = Category::find("FOOD");
         $this->assertNull($category);
 
