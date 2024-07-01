@@ -19,4 +19,15 @@ class CommentTest extends TestCase
 
         $this->assertNotNull($comment->id);
     }
+
+    public function testCreateDefaultValue()
+    {
+        $comment = new Comment();
+        $comment->email = 'xilef@gmail.com';
+        $comment->save();
+
+        $this->assertNotNull($comment->id);
+        $this->assertEquals('Sample Title', $comment->title);
+        $this->assertEquals('Sample Comment', $comment->comment);
+    }
 }
