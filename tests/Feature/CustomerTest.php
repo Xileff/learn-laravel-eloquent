@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Models\Customer;
+use App\Models\VirtualAccount;
 use App\Models\Wallet;
 use Database\Seeders\CustomerSeeder;
+use Database\Seeders\VirtualAccountSeeder;
 use Database\Seeders\WalletSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -38,5 +40,18 @@ class CustomerTest extends TestCase
         $customer->wallet()->save($wallet);
 
         $this->assertNotNull($wallet->customer_id);
+    }
+
+    // Relation : Customer -> Wallet -> Virtual Account
+    public function testHasOneThrough()
+    {
+        $this->seed([CustomerSeeder::class, WalletSeeder::class, VirtualAccountSeeder::class]);
+
+        $customer = Customer::find('XILEF');
+        $this->assertNotNull($customer);
+
+        $virtualAccount = $customer->virtualAccount;
+        $this->assertNotNull($virtualAccount);
+        $this->assertEquals($virtualAccount->wallet_id, $customer->wallet->id);
     }
 }
