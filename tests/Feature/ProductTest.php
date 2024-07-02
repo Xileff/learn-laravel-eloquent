@@ -8,6 +8,7 @@ use Database\Seeders\CategorySeeder;
 use Database\Seeders\ProductSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
@@ -52,5 +53,28 @@ class ProductTest extends TestCase
 
         $this->assertNotNull($products);
         $this->assertCount(1, $products);
+    }
+
+    public function testSerialization()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $products = Product::get();
+        $this->assertCount(2, $products);
+
+        $json = $products->toJSON(JSON_PRETTY_PRINT);
+        Log::info($json);
+    }
+
+    public function testSerializationRelation()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $products = Product::get();
+        $products->load(["category"]);
+        $this->assertCount(2, $products);
+
+        $json = $products->toJSON(JSON_PRETTY_PRINT);
+        Log::info($json);
     }
 }

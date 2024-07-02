@@ -23,6 +23,10 @@ class Category extends Model
         'description'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:U'
+    ];
+
     protected static function booted()
     {
         parent::booted();
