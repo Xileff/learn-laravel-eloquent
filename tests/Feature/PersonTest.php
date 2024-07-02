@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Address;
 use App\Models\Person;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -23,5 +24,19 @@ class PersonTest extends TestCase
 
         $this->assertEquals('JOKO', $person->first_name);
         $this->assertEquals('Morro', $person->last_name);
+    }
+
+    public function testCustomCast()
+    {
+        $person = new Person();
+        $person->full_name = "Felix Xilef";
+        $person->address = new Address("Jalan Belum Jadi", "Jakarta", "Indonesia", "123123"); // manggil set di AsAddress
+        $person->save();
+
+        // manggil get di AsAddress
+        $this->assertEquals("Jalan Belum Jadi", $person->address->street);
+        $this->assertEquals("Jakarta", $person->address->city);
+        $this->assertEquals("Indonesia", $person->address->country);
+        $this->assertEquals("123123", $person->address->postal_code);
     }
 }
