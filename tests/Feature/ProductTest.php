@@ -39,4 +39,18 @@ class ProductTest extends TestCase
         $this->assertNotNull($mostExpensiveProduct);
         $this->assertEquals('2', $mostExpensiveProduct->id);
     }
+
+    public function testEloquentCollection()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        // Product 1, 2
+        $products = Product::get();
+
+        // WHERE id in (1, 2)
+        $products = $products->toQuery()->where('price', 200)->get();
+
+        $this->assertNotNull($products);
+        $this->assertCount(1, $products);
+    }
 }
