@@ -272,4 +272,17 @@ class CategoryTest extends TestCase
 
         $this->assertCount(1, $products);
     }
+
+    public function testAggregatingRelations()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class]);
+
+        $category = Category::find("FOOD");
+
+        $total = $category->products()->count();
+        $this->assertEquals(2, $total);
+
+        $total = $category->products()->where('price', '=', 200)->count();
+        $this->assertEquals(1, $total);
+    }
 }
