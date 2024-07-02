@@ -5,7 +5,9 @@ namespace Tests\Feature;
 use App\Models\Customer;
 use App\Models\VirtualAccount;
 use App\Models\Wallet;
+use Database\Seeders\CategorySeeder;
 use Database\Seeders\CustomerSeeder;
+use Database\Seeders\ProductSeeder;
 use Database\Seeders\VirtualAccountSeeder;
 use Database\Seeders\WalletSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -54,5 +56,31 @@ class CustomerTest extends TestCase
         $virtualAccount = $customer->virtualAccount;
         $this->assertNotNull($virtualAccount);
         $this->assertEquals($virtualAccount->wallet_id, $customer->wallet->id);
+    }
+
+    public function testManyToMany()
+    {
+        $this->seed([CategorySeeder::class, ProductSeeder::class, CustomerSeeder::class]);
+
+        $customer = Customer::find('XILEF');
+        $this->assertNotNull($customer);
+
+        $customer->likeProducts()->attach('1'); // nge-like product dengan id 1
+
+        $products = $customer->likeProducts;
+        $this->assertCount(1, $products);
+
+        $this->assertEquals('1', $products[0]->id);
+    }
+
+    public function testManyToManyDetach()
+    {
+        $this->testManyToMany();
+
+        $customer = Customer::find('XILEF');
+        $customer->likeProducts()->detach('1'); // batal like product dengan id 1
+
+        $products = $customer->likeProducts;
+        $this->assertCount(0, $products);
     }
 }
