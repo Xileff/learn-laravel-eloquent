@@ -43,6 +43,7 @@ class CustomerTest extends TestCase
     }
 
     // Relation : Customer -> Wallet -> Virtual Account
+    // select `virtual_accounts`.*, `wallets`.`customer_id` as `laravel_through_key` from `virtual_accounts` inner join `wallets` on `wallets`.`id` = `virtual_accounts`.`wallet_id` where `wallets`.`customer_id` = ? limit 1  
     public function testHasOneThrough()
     {
         $this->seed([CustomerSeeder::class, WalletSeeder::class, VirtualAccountSeeder::class]);

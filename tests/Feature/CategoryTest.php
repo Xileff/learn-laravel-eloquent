@@ -33,6 +33,7 @@ class CategoryTest extends TestCase
             $categories[] = [
                 "id" => "ID $i",
                 "name" => "Name $i",
+                'is_active' => true,
             ];
         }
 
@@ -41,8 +42,8 @@ class CategoryTest extends TestCase
         $this->assertTrue($result);
 
         // $total = Category::query()->count();
-        $total = Category::count();
-        $this->assertEquals(10, $total);
+        $categories = Category::get();
+        $this->assertCount(10, $categories);
     }
 
     public function testFind()
@@ -74,6 +75,7 @@ class CategoryTest extends TestCase
             $category = new Category();
             $category->id = "ID $i";
             $category->name = "Category $i";
+            $category->is_active = true;
             $category->save();
         }
 
@@ -92,7 +94,8 @@ class CategoryTest extends TestCase
         for ($i = 0; $i < 10; $i++) {
             $categories[] = [
                 "id" => "ID $i",
-                "name" => "Category $i"
+                "name" => "Category $i",
+                "is_active" => true,
             ];
         }
         $result = Category::insert($categories);
@@ -125,7 +128,8 @@ class CategoryTest extends TestCase
         for ($i = 0; $i < 10; $i++) {
             $categories[] = [
                 "id" => "ID $i",
-                "name" => "Category $i"
+                "name" => "Category $i",
+                "is_active" => true,
             ];
         }
         $result = Category::insert($categories);
@@ -212,7 +216,7 @@ class CategoryTest extends TestCase
 
         $products = $category->products;
         $this->assertNotNull($products);
-        $this->assertCount(1, $products);
+        $this->assertCount(2, $products);
     }
 
     public function testOneToManyQuery()
@@ -240,10 +244,10 @@ class CategoryTest extends TestCase
 
         $category = Category::find('FOOD');
         $products = $category->products;
-        $this->assertCount(1, $products);
+        $this->assertCount(2, $products);
 
         $outOfStockProducts = $category->products()->where('stock', '<=', 0)->get();
-        $this->assertCount(1, $outOfStockProducts);
+        $this->assertCount(2, $outOfStockProducts);
     }
 
     // select `reviews`.*, `products`.`category_id` as `laravel_through_key` from `reviews` inner join `products` on `products`.`id` = `reviews`.`product_id` where `products`.`category_id` = ?
