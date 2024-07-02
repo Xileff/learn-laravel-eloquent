@@ -99,6 +99,7 @@ class CustomerTest extends TestCase
             $this->assertNotNull($pivot->created_at);
         }
     }
+
     public function testPivotAttributeCondition()
     {
         $this->testManyToMany();
@@ -111,6 +112,22 @@ class CustomerTest extends TestCase
             $this->assertNotNull($pivot);
             $this->assertNotNull($pivot->customer_id);
             $this->assertNotNull($pivot->product_id);
+            $this->assertNotNull($pivot->created_at);
+        }
+    }
+    public function testPivotModel()
+    {
+        $this->testManyToMany();
+
+        $customer = Customer::find('XILEF');
+        $products = $customer->likeProductsLastWeek;
+
+        foreach ($products as $product) {
+            $pivot = $product->pivot; // object model Like
+            $this->assertNotNull($pivot);
+
+            $this->assertNotNull($pivot->customer->id);
+            $this->assertNotNull($pivot->product->id);
             $this->assertNotNull($pivot->created_at);
         }
     }
