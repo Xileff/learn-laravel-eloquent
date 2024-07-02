@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\VirtualAccount;
 use App\Models\Wallet;
@@ -130,5 +131,15 @@ class CustomerTest extends TestCase
             $this->assertNotNull($pivot->product->id);
             $this->assertNotNull($pivot->created_at);
         }
+    }
+
+    public function testEagerLoading()
+    {
+        $this->seed([CustomerSeeder::class, WalletSeeder::class]);
+
+        // $customer = Customer::with(["wallet"])->find("XILEF");
+        $customer = Customer::find("XILEF");
+        $this->assertNotNull($customer);
+        // $this->assertNotNull($category->products);
     }
 }
